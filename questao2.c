@@ -8,14 +8,20 @@
 
 
 int main(){
+    char País[10];
     int Masculino, Feminino;
     Masculino = 0;
     Feminino = 0;
     int contador = 0;
 
-    char str[100];
+    printf("Digite o NOC do país: ");
+    scanf("%s", &País);
     FILE*output = fopen("output\\bios.csv", "r");
-    while (fgets(str, sizeof(str), output) != NULL && contador < 5){
+    if (output == NULL){
+        printf("Erro ao abrir o arquivo!\n");
+        return 1;
+    
+    while ( ){
       printf("%d: %s", contador + 1, str);
     contador++;
     }
