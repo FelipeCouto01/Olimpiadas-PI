@@ -14,11 +14,11 @@ int main(){
     int contador = 0;
 
     char str[100];
-    FILE*athletes = fopen("athletes\\bios.csv", "r");
-    while (fgets(str, sizeof(str), athletes) != NULL && contador < 5){
+    FILE*output = fopen("output\\bios.csv", "r");
+    while (fgets(str, sizeof(str), output) != NULL && contador < 5){
       printf("%d: %s", contador + 1, str);
     contador++;
     }
-    fclose(athletes);
+    fclose(output);
     return 0;
 }
