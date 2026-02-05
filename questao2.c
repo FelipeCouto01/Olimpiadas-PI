@@ -7,24 +7,35 @@
 #include <stdlib.h>
 
 
-int main(){
+int main() {
+    
     // Declarando as variáveis:
-    char País[10];
+    char [300]
     int Masculino, Feminino;
-    int país_representante = 1;
     Masculino = 0;
     Feminino = 0;
     int contador = 0;
+    
 // recebendo o país escolhido e testando a abertura do arquivo:
+    
     printf("Digite o NOC do país: ");
     scanf("%s", &país);
     FILE*output = fopen("output/bios.csv", "r");
-    if (output == NULL){
+    if (output == NULL) {
         printf("Erro ao abrir o arquivo!\n");
         return 1;
+    while (fgets(linha, sizeof(linha), output)) {
+int coluna = 0;
+char *token = strtok(linha, ",");
 
-        while (país_representante == 1)
-    }
-    fclose(output);
+        while (token != NULL) {
+            if (coluna == 6) {
+                if (strcmp(token, busca) == 0) {
+                    printf ("País encontrado\n");
+                }
+            }    
+        }  
+     } 
+    }   
     return 0;
 }
