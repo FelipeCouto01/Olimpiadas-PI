@@ -16,7 +16,7 @@ int main(){
 
     printf("Digite o NOC do país: ");
     scanf("%s", &País);
-    FILE*output = fopen("output\\bios.csv", "r");
+    FILE*output = fopen("output/bios.csv", "r");
     if (output == NULL){
         printf("Erro ao abrir o arquivo!\n");
         return 1;
