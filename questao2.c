@@ -8,22 +8,22 @@
 
 
 int main(){
+    // Declarando as variáveis:
     char País[10];
     int Masculino, Feminino;
+    int país_representante = 1;
     Masculino = 0;
     Feminino = 0;
     int contador = 0;
-
+// recebendo o país escolhido e testando a abertura do arquivo:
     printf("Digite o NOC do país: ");
-    scanf("%s", &País);
+    scanf("%s", &país);
     FILE*output = fopen("output/bios.csv", "r");
     if (output == NULL){
         printf("Erro ao abrir o arquivo!\n");
         return 1;
-    
-    while ( ){
-      printf("%d: %s", contador + 1, str);
-    contador++;
+
+        while (país_representante == 1)
     }
     fclose(output);
     return 0;
