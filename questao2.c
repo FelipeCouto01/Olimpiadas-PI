@@ -11,10 +11,14 @@ int main() {
     
     // Declarando as variáveis:
     char [300]
-    int Masculino, Feminino;
-    Masculino = 0;
-    Feminino = 0;
+    //int Masculino, Feminino;
+    //Masculino = 0;
+    //Feminino = 0;
     int contador = 0;
+    int coluna = 0;
+    char país[30];
+    char linha[3000];
+    char *token;
     
 // recebendo o país escolhido e testando a abertura do arquivo:
     
@@ -24,16 +28,25 @@ int main() {
     if (output == NULL) {
         printf("Erro ao abrir o arquivo!\n");
         return 1;
+    
+    // Fazendo a leitura por linhas:
+    
     while (fgets(linha, sizeof(linha), output)) {
 int coluna = 0;
 char *token = strtok(linha, ",");
 
+        // Fazendo uma busca pela posição do NOC ->(interpretado como o país representante do atleta);
+        //Testando somente a busca pelo país por enquanto;
+
         while (token != NULL) {
-            if (coluna == 6) {
-                if (strcmp(token, busca) == 0) {
-                    printf ("País encontrado\n");
+            if (coluna == 5) {
+                if (strstr(token, país) != NULL) {
+                    printf ("País encontrado: %s\n", token);
+                    contador++
                 }
-            }    
+            }   
+            token = strtok(NULL, ",");
+            coluna++;
         }  
      } 
     }   
