@@ -1,5 +1,5 @@
 //Para um determinado país, determine a quantidade de atletas do sexo masculino e feminino que já participaram das Olimpíadas
-// Contém alguns erros de estrutura que serão corrigidos no próximo commit. (a energia caiu, bateria pouca...)
+// (a energia caiu, bateria pouca...)
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -9,7 +9,7 @@
 int main() {
     
     // Declarando as variáveis:
-    char [300]
+    
     //int Masculino, Feminino; // não nescessárias por enquanto
     //Masculino = 0;
     //Feminino = 0;
@@ -22,7 +22,7 @@ int main() {
 // recebendo o país escolhido e testando a abertura do arquivo:
     
     printf("Digite o NOC do país: ");
-    scanf("%s", &país);
+    scanf("%s", país);
     FILE*output = fopen("output/bios.csv", "r");
     if (output == NULL) {
         printf("Erro ao abrir o arquivo!\n");
@@ -31,8 +31,8 @@ int main() {
     // Fazendo a leitura por linhas:
     
     while (fgets(linha, sizeof(linha), output)) {
-int coluna = 0;
-char *token = strtok(linha, ",");
+      int coluna = 0;
+      char *token = strtok(linha, ",");
 
         // Fazendo uma busca pela posição do NOC ->(interpretado como o país representante do atleta);
         //Testando somente a busca pelo país por enquanto;
@@ -41,13 +41,15 @@ char *token = strtok(linha, ",");
             if (coluna == 5) {
                 if (strstr(token, país) != NULL) {
                     printf ("País encontrado: %s\n", token);
-                    contador++
+                    contador++;
                 }
             }   
             token = strtok(NULL, ",");
             coluna++;
         }  
-     } 
-    }   
+     }
+    printf("Número de vezes que o %s aparece: %d\n", país, contador);
+    fclose(output);
+    
     return 0;
 }
