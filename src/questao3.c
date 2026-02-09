@@ -11,6 +11,63 @@
 // Coloquei 200.000 para ter uma margem de segurança e evitar erros de memória (ACONTECEU)
 #define MAX_MAPA_ID 200000
 
+// -------------------------------------------------------------------
+// FUNÇÃO NOVA: Gera o gráfico usando Gnuplot
+// -------------------------------------------------------------------
+
+void gerar_grafico_gnuplot(char* pais, int homens, int mulheres) {
+    
+    // Abre o caminho para enviar comandos pro gnuplot
+    FILE *gnuplotPipe = popen("\"C:\\Program Files\\gnuplot\\bin\\gnuplot.exe\" -persistent", "w");
+
+    if (gnuplotPipe == NULL) {
+        printf("Gnuplot nao encontrado\n");
+        return;
+    }
+
+    // Configurações visuais do gráfico
+    // "set terminal pngcairo": Avisa ao Gnuplot para não abrir uma janela, mas sim
+    //  renderizar uma imagem PNG (usando a lib 'cairo')
+    // "size 800,600": Define o tamanho da imagem gerada (Largura x Altura) em pixels
+    // "font": Escolhe a fonte (Verdana) e o tamanho (10) para os textos do gráfico
+    fprintf(gnuplotPipe, "set terminal pngcairo size 800,600 enhanced font 'Verdana,10'\n");
+    fprintf(gnuplotPipe, "set output 'grafico_%s.png'\n", pais); // Nome do arquivo gerado
+    
+    // Títulos e Eixos ----- O fprintf envia comandos para o gnuplot, como se estivesse digitando na linha de comando do gnuplot
+    // Esses comandos estão configurando o gráfico
+    fprintf(gnuplotPipe, "set title 'Atletas do %s com >1 Medalha de Ouro'\n", pais); // titulo do grafico
+    fprintf(gnuplotPipe, "set ylabel 'Quantidade de Atletas'\n"); // titulo do eixo y
+    fprintf(gnuplotPipe, "set style fill solid 1.0 border -1\n"); // configura o estilo das barras, o solid 1.0 deixa as barras completamente preenchidas, e border -1 desenha uma borda preta ao redor das barras
+    fprintf(gnuplotPipe, "set boxwidth 0.5\n"); // é a largura da barra, ta deixando elas mais finas
+    fprintf(gnuplotPipe, "set grid y\n"); // faz aquelas linhas de grade no eixo Y
+    
+    // Eu pego o maior valor entre homens e mulheres (max_val) e digo para o eixo Y ir de 0 até max_val + 2
+    // Isso cria aquele espacinho em branco no topo do gráfico
+    int max_val = (homens > mulheres ? homens : mulheres);
+    fprintf(gnuplotPipe, "set yrange [0:%d]\n", max_val + 2); 
+
+    // "plot '-'":    Avisa "Não procure um arquivo. Os dados virão digitados abaixo"
+    // "using 2":     Use a 2ª coluna (os números) para definir a altura da barra
+    // ":xtic(1)":    Use a 1ª coluna (os nomes "Masculino/Feminino") como rótulos no eixo X
+    // "with boxes":  O formato do desenho deve ser Caixas (Barras)
+    // "notitle":     Remove a legenda automática para limpar o visual
+    // "linecolor":   Define a cor da barra, azul :D
+    fprintf(gnuplotPipe, "plot '-' using 2:xtic(1) with boxes notitle linecolor rgb '#4682B4'\n");
+
+    // Enviando o valor dos homens e mulheres para o gnuplot
+    fprintf(gnuplotPipe, "\"Masculino\" %d\n", homens);
+    fprintf(gnuplotPipe, "\"Feminino\" %d\n", mulheres);
+    
+    // Finaliza o envio dos dados
+    fprintf(gnuplotPipe, "e\n");
+
+    fflush(gnuplotPipe); // Garante que todos os comandos foram enviados para o gnuplot, ele meio que empurra tudo que possa ter ficado preso no buffer para o gnuplot processar
+    pclose(gnuplotPipe); // Fecha o pipe, o gnuplot processa os comandos e gera o gráfico
+
+    printf("\nGrafico gerado: 'grafico_%s.png'\n", pais); // so para deixar mais organizado no menu visual do terminal
+
+}
+
 void resolver_questao_3(char* pais_alvo) {
     printf("\n=== INICIANDO ANALISE PARA O PAIS: %s ===\n", pais_alvo);
 
@@ -138,6 +195,13 @@ void resolver_questao_3(char* pais_alvo) {
     printf("Mulheres com mais de 1 Ouro: %d\n", mulheres_multi);
     printf("#######################################\n");
 
+    // Gera o gráfico usando Gnuplot
+    if (homens_multi > 0 || mulheres_multi > 0) {
+        gerar_grafico_gnuplot(pais_alvo, homens_multi, mulheres_multi);
+    } else {
+        printf("Nenhum atleta do %s conquistou mais de uma medalha de ouro.\n", pais_alvo);
+    }
+
     // Free libera a memória RAM que o calloc pegou
     // É boa prática sempre limpar a memoria antes de sair. (Evitar vazamentos de memória para não dar merda)
     free(vetor_resultados);
@@ -153,3 +217,4 @@ int main() {
     
     return 0; 
 }
+
