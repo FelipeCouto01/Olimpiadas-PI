@@ -2,29 +2,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "structs.h"
-#include "leitura.h"
+#include "include/structs.h" 
+#include "include/leitura.h"
 
 
-// isso avisa ao compilador a presença dessa função
-void ordernarPontuacao(Resultado *dados, int totalDeDados);
-
-// aqui vai conter as outras questões
+// isso avisa ao compilador a presença dessas funções. Cada função atua em sua respectiva questão
+void ordenarRanking(Resultado *dados, int totalDeDados);
+void participacaoPorGenero();
+void resolver_questao_3();
+void ordenarPontuacao(Resultado *dados, int totalDeDados);
 
 /*
 Quando usamos scanf, ele lê o número mas deixa o "Enter" (\n) sobrando na memória. Se não limparmos, o próximo comando de leitura vai achar esse "Enter" velho e pular a vez. Essa função consome tudo o que sobrou para deixar o caminho limpo.
+A função pausar atua para impedir que o terminal retorne à tela anterior antes do usuário desejar fazer isso. É uma auxiliar do próprio limpar_buffer
 */
 void limpar_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
-
+void pausar() {
+    printf("\n[Pressione ENTER para voltar]");
+    limpar_buffer(); getchar();
+}
 int main() {
     int qtd_res = 0;
+    //Carregando o banco de dados que ficou sem ser
     Resultado *dados_res = NULL;
 
     printf("Carregando banco de dados...\n");
-    dados_res = carregar_resultados("data/results.csv", &qtd_res);
+    dados_res = carregar_resultados("results.csv", &qtd_res);
 
     if (!dados_res) {
         printf("[ERRO] results.csv nao encontrado.\n");
@@ -40,14 +46,38 @@ int main() {
         #endif
 
         printf("\n=== MENU OLIMPICO ===\n");
-        printf("1. Medalhistas que já conquistaram mais de uma medalha\n");
-        printf("2. Quantos atletas participaram de Olimpiada\n");
-        printf("3. Ranking olímpico por numero de medalhas\n");
+        printf("3. Ranking olimpico por numero de medalhas\n");
+        printf("2. Participacao por genero nas Olimpiadas\n");
+        printf("1. Medalhistas que ja conquistaram mais de uma medalha\n");
         printf("4. Ranking olimpico por media ponderada de medalhas\n");
         printf("0. Sair\n");
         printf("Escolha: ");
 
+        scanf("%d", &opcao);
+        if (opcao == 0) break;
+
+        switch (opcao) {
+            case 1:
+                ordenarRanking(dados_res, qtd_res);
+                pausar();
+                break;
+            case 2:
+                participacaoPorGenero();
+                pausar();
+                break;
+            case 3:
+                resolver_questao_3();
+                pausar();
+                break;
+            case 4:
+                ordenarPontuacao(dados_res, qtd_res);
+                pausar();
+                break;
+            default:
+                printf("Opcao invalida.\n");
+                pausar();
+        }
+    }
     free(dados_res);
     return 0;
-    }
 }
