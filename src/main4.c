@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "structs.h"
-#include "leitura.h"
+#include "../include/structs.h"
+#include "../include/leitura.h"
 
 // Avisa que essa função existe no outro arquivo (questao4.c)
 void ordernarPontuacao(Resultado *dados, int total_dados);

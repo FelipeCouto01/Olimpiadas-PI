@@ -4,7 +4,7 @@
 #include "structs.h"
 
 // Protótipo da função que carrega o results.csv
-Resultado* carregar_resultados(const char* filename, int* qtd);
+Resultado* carregar_resultados(const char *caminho, int *total);
 // Protótipo da função que carrega o bios.csv
 Atleta* carregar_atletas(const char* filename, int* qtd);
 

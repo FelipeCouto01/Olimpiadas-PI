@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "structs.h"
+#include "../include/structs.h"
+#include "../include/leitura.h"
 
 // Como o C não possue funções como toUpper ou toLower, é preciso criar uma função para ele não criar diferenças por causa de teclas maiúsculas ou minúsculas
 void deixarMaiusculo(char *str) {
@@ -32,6 +33,58 @@ int compararPontos(const void *a, const void *b) {
     // Subtração invertida (B - A) gera ordem decrescente
     return pais2.pontuacao_total - pais1.pontuacao_total;
 }
+
+//----------------------------- Inicio do codigo de grafico ----------------------------- 
+
+void gerar_grafico_ranking(PaisStats placar[10]) {
+    
+    FILE *gnuplotPipe = popen("\"C:\\Program Files\\gnuplot\\bin\\gnuplot.exe\" -persistent", "w");
+
+    if (gnuplotPipe == NULL) {
+        printf("Gnuplot nao encontrado\n");
+        return;
+    }
+
+    // Visual do gráfico
+    // "set terminal pngcairo": Avisa pro Gnuplot para não abrir uma janela, mas sim
+    //  renderizar uma imagem PNG (usando a lib 'cairo')
+    // "size 1000,600": Define o tamanho da imagem gerada (Largura x Altura) em pixels
+    // "font": Escolhe a fonte (Verdana) e o tamanho (10) para os textos do gráfico
+    fprintf(gnuplotPipe, "set terminal pngcairo size 1000,600 enhanced font 'Verdana,10'\n");
+    fprintf(gnuplotPipe, "set output 'grafico_ranking_top10.png'\n");
+
+    fprintf(gnuplotPipe, "set title 'Ranking de Pontuacao (Top 10)'\n"); // titulo do grafico
+    fprintf(gnuplotPipe, "set ylabel 'Pontos'\n"); //titulo do eixo y
+    fprintf(gnuplotPipe, "set xlabel 'Paises'\n"); //titulo do eixo x
+    
+    // "set style fill solid 1.0": Deixa as barras completamente preenchidas
+    // "border -1": Desenha uma borda preta ao redor das barras
+    fprintf(gnuplotPipe, "set style fill solid 1.0 border -1\n");
+    fprintf(gnuplotPipe, "set boxwidth 0.5\n"); 
+    fprintf(gnuplotPipe, "set grid y\n");
+
+    // Fiz uma escala y dinamica
+    // Eu pego a pontuação do primeiro colocado (placar[0], que é o maior pois o array já está ordenado)
+    // e digo para o eixo Y ir de 0 até esse valor + 10. Isso cria aquele espacinho em branco no topo.
+    fprintf(gnuplotPipe, "set yrange [0:%d]\n", placar[0].pontuacao_total + 10);
+
+    // Plotagem, expliquei la na questão 3 
+    fprintf(gnuplotPipe, "plot '-' using 2:xtic(1) with boxes notitle linecolor rgb '#4682B4'\n");
+
+    // Loop enviando os dados
+    for (int i = 0; i < 10; i++) {
+        fprintf(gnuplotPipe, "\"%s\" %d\n", placar[i].noc, placar[i].pontuacao_total);
+    }
+
+    fprintf(gnuplotPipe, "e\n"); 
+
+    fflush(gnuplotPipe); // Garante que todos os comandos foram enviados para o gnuplot
+    pclose(gnuplotPipe); // Fecha o pipe, o gnuplot processa os comandos e gera a imagem PNG
+
+    printf("\nGrafico gerado: 'grafico_ranking_top10.png'\n");
+}
+
+//----------------------------- Fim do codigo de grafico ----------------------------- 
 
 // Essa é a função que organiza a lógica da questão de fato, que é ordenar avaliando a pontuação de medalhas
 void ordernarPontuacao(Resultado *dados, int totalDeDados){
@@ -130,4 +183,6 @@ void ordernarPontuacao(Resultado *dados, int totalDeDados){
                placar[i].qtd_bronzes, 
                placar[i].pontuacao_total);
     }
+    // manda os dados para o gnuplot gerar o gráfico
+    gerar_grafico_ranking(placar);
 }
