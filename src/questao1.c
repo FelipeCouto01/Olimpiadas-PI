@@ -8,7 +8,7 @@
 
 
 // Essa função percorre a string recebida e transforma cada caractere em maiúsculo. Isso evita erro quando o usuário digita siglas em minúsculo.
-void deixarMaiusculo(char *str) {
+void deixarMaiusculoQ1(char *str) {
     for (int i = 0; str[i] != '\0'; i++) {
         str[i] = toupper(str[i]);
     }
@@ -16,7 +16,7 @@ void deixarMaiusculo(char *str) {
 
 
 // Essa função verifica se o código NOC digitado existe dentro dos dados carregados. Ela percorre todos os registros comparando as siglas.
-int validarNOC(char *noc, Resultado *dados, int totalDeDados) {
+int validarNOCQ1(char *noc, Resultado *dados, int totalDeDados) {
     for (int i = 0; i < totalDeDados; i++) {
         if (strcmp(dados[i].noc, noc) == 0) {
             return 1;  // encontrado
@@ -43,7 +43,7 @@ void ordenarRanking(Resultado *dados, int totalDeDados){
         scanf("%s", entrada);
 
         // Padroniza entrada para evitar erro de comparação
-        deixarMaiusculo(entrada);
+        deixarMaiusculoQ1(entrada);
 
         // Verifica tamanho da sigla
         if(strlen(entrada) != 3){
@@ -52,7 +52,7 @@ void ordenarRanking(Resultado *dados, int totalDeDados){
         }
 
         // Verifica se existe nos dados
-        if(validarNOC(entrada, dados, totalDeDados)){
+        if(validarNOCQ1(entrada, dados, totalDeDados)){
 
             int repetido = 0;
 
