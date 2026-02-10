@@ -3,16 +3,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h> 
 
-// Incluindo o arquivo que contém as funções de ler CSV
-#include "leitura.c" 
+#include "../include/structs.h"
+#include "../include/leitura.h"
 
 // Define o tamanho do Mapa de IDs
 // Coloquei 200.000 para ter uma margem de segurança e evitar erros de memória (ACONTECEU)
 #define MAX_MAPA_ID 200000
 
 // -------------------------------------------------------------------
-// FUNÇÃO NOVA: Gera o gráfico usando Gnuplot
+// Gera o gráfico usando Gnuplot
 // -------------------------------------------------------------------
 
 void gerar_grafico_gnuplot(char* pais, int homens, int mulheres) {
@@ -76,11 +77,11 @@ void resolver_questao_3(char* pais_alvo) {
     int qtd_atletas = 0;
 
     // ---------------------------------------------------------
-    // PASSO 1: Carregar os dados do arquivo de Resultados (as medalhas)
+    // Carregar os dados do arquivo de Resultados (as medalhas)
     // ---------------------------------------------------------
     
     // A função carregar_resultados (que está no leitura.c)
-    Resultado* vetor_resultados = carregar_resultados("../data/results.csv", &qtd_resultados);
+    Resultado* vetor_resultados = carregar_resultados("data/results.csv", &qtd_resultados); // tirei aq tbm
     
     // Me previnindo de um possível erro na leitura do arquivo, caso de erro eu vou saber mais facilmente e vou evitar que o código trave ou de merda
     if (vetor_resultados == NULL) {
@@ -89,9 +90,9 @@ void resolver_questao_3(char* pais_alvo) {
     }
 
     // ---------------------------------------------------------
-    // PASSO 2: Carregar os dados do arquivo bios.csv(Atletas)
+    // Carregar os dados do arquivo bios.csv(Atletas)
     // ---------------------------------------------------------
-    Atleta* vetor_atletas = carregar_atletas("../data/bios.csv", &qtd_atletas);
+    Atleta* vetor_atletas = carregar_atletas("data/bios.csv", &qtd_atletas); // tirei o .. pq POR ALGUM MOTIVO A LOGICA DO #INCLUDE É DIFERENTE, ent tava dando erro na leitura :/
 
     // Verificação de segurança para o segundo arquivo
     if (vetor_atletas == NULL) {
@@ -104,7 +105,7 @@ void resolver_questao_3(char* pais_alvo) {
     }
 
     // ---------------------------------------------------------
-    // PASSO 3: Criar o Mapa para contagem
+    // Criar o Mapa para contagem
     // ---------------------------------------------------------
 
     // Usei calloc em vez de malloc
@@ -121,7 +122,7 @@ void resolver_questao_3(char* pais_alvo) {
     }
 
     // ---------------------------------------------------------
-    // PASSO 4: Contar Medalhas de Ouro
+    // Contar Medalhas de Ouro
     // ---------------------------------------------------------
     printf("--> Processando medalhas de ouro...\n");
     int ouros_encontrados = 0;
@@ -151,7 +152,7 @@ void resolver_questao_3(char* pais_alvo) {
     printf("--> Total de medalhas de ouro do %s encontradas: %d\n", pais_alvo, ouros_encontrados);
 
     // ---------------------------------------------------------
-    // PASSO 5: Verificar Sexo
+    // Verificar Sexo
     // ---------------------------------------------------------
     printf("--> Verificando generos dos multi-medalhistas...\n");
     
@@ -187,7 +188,7 @@ void resolver_questao_3(char* pais_alvo) {
     }
 
     // ---------------------------------------------------------
-    // PASSO 6: Exibir Resultados e Limpar Memoria (menu q sera usado dps)
+    // Exibir Resultados e Limpar Memoria (menu q sera usado dps)
     // ---------------------------------------------------------
     printf("\n#######################################\n");
     printf("RESULTADO FINAL - %s\n", pais_alvo);
@@ -207,14 +208,5 @@ void resolver_questao_3(char* pais_alvo) {
     free(vetor_resultados);
     free(vetor_atletas);
     free(mapa_ouros);
-}
-
-// Função principal que o sistema operacional chama para iniciar o programa 
-int main() {
-
-    // Você pode mudar para "USA", "FRA", "CHN" para testar outros países.
-    resolver_questao_3("BRA");
-    
-    return 0; 
 }
 
