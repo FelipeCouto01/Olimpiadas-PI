@@ -6,7 +6,7 @@
 // Ranking por eficiencia
 // A eficiencia é calculada como:
 // total de medalhas / total de atletas unicos
-
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,47 +36,19 @@ int validarNOC(char *noc, Resultado *dados, int totalDeDados) {
 // Função usada pelo qsort para ordenar os países.
 // A comparação é feita pela eficiência calculada.
 // A ordenação é decrescente (mais eficiente primeiro).
-int compararEficiencia(const void *a, const void *b) {
-
-    PaisStats *p1 = (PaisStats*)a;
-    PaisStats *p2 = (PaisStats*)b;
-
-    double e1 = (p1->total_atletas == 0) ? 0 :
-                (double)p1->total_medalhas / p1->total_atletas;
-
-    double e2 = (p2->total_atletas == 0) ? 0 :
-                (double)p2->total_medalhas / p2->total_atletas;
-
-    if (e1 < e2) return 1;
-    if (e1 > e2) return -1;
-    return 0;
+int compararPaises(const void *a, const void *b) {
+    PaisRanking *p1 = (PaisRanking *)a;
+    PaisRanking *p2 = (PaisRanking *)b;
+    return p2->total_medalhas - p1->total_medalhas;
 }
-
-
-// Essa função verifica se um atleta já foi contado.
-// Isso evita duplicar atletas quando aparecem em várias linhas do arquivo.
-int atletaJaExiste(int *lista, int tamanho, int id) {
-    for(int i=0;i<tamanho;i++){
-        if(lista[i] == id)
-            return 1;
-    }
-    return 0;
-}
-
-
 
 // Função principal responsável por montar o ranking
-void ordenarEficiencia(Resultado *dados, int totalDeDados){
+void ordenarRanking(Resultado *dados, int totalDeDados){
 
-    printf("\nRanking por eficiencia (medalhas/atletas)\n");
+    printf("\nRanking total\n");
 
     // Vetor que guarda as estatísticas dos países escolhidos
     PaisStats placar[10];
-
-    // Matrizes auxiliares para guardar IDs únicos de atletas
-    int atletasTemp[10][60000];
-    int atletasCount[10] = {0};
-
     int count = 0;
 
     // Loop que permite o usuário escolher os 10 países
@@ -115,7 +87,7 @@ void ordenarEficiencia(Resultado *dados, int totalDeDados){
             else{
                 strcpy(placar[count].noc, entrada);
                 placar[count].total_medalhas = 0;
-                placar[count].total_atletas = 0;
+                
 
                 printf(" -> %s adicionado\n", entrada);
                 count++;
@@ -137,13 +109,6 @@ void ordenarEficiencia(Resultado *dados, int totalDeDados){
             if(strcmp(dados[i].noc, placar[k].noc)==0){
 
                 // Conta atleta apenas uma vez
-                if(!atletaJaExiste(atletasTemp[k],
-                                   atletasCount[k],
-                                   dados[i].athlete_id))
-                {
-                    atletasTemp[k][atletasCount[k]++] =
-                        dados[i].athlete_id;
-
                     placar[k].total_atletas++;
                 }
 
