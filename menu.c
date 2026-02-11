@@ -30,7 +30,7 @@ int main() {
     Resultado *dados_res = NULL;
 
     printf("Carregando banco de dados...\n");
-    dados_res = carregar_resultados("data/results.csv", &qtd_res);
+    dados_res = carregar_resultados("results.csv", &qtd_res);
 
     if (!dados_res) {
         printf("[ERRO] results.csv nao encontrado.\n");
@@ -64,7 +64,7 @@ int main() {
                 pausar();
                 break;
             case 2:
-                // participacaoPorGenero();
+                participacaoPorGenero();
                 pausar();
                 break;
             case 3:

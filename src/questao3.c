@@ -81,7 +81,7 @@ void resolver_questao_3(char* pais_alvo) {
     // ---------------------------------------------------------
     
     // A função carregar_resultados (que está no leitura.c)
-    Resultado* vetor_resultados = carregar_resultados("data/results.csv", &qtd_resultados); // tirei aq tbm
+    Resultado* vetor_resultados = carregar_resultados("results.csv", &qtd_resultados); // tirei aq tbm
     
     // Me previnindo de um possível erro na leitura do arquivo, caso de erro eu vou saber mais facilmente e vou evitar que o código trave ou de merda
     if (vetor_resultados == NULL) {
@@ -92,7 +92,7 @@ void resolver_questao_3(char* pais_alvo) {
     // ---------------------------------------------------------
     // Carregar os dados do arquivo bios.csv(Atletas)
     // ---------------------------------------------------------
-    Atleta* vetor_atletas = carregar_atletas("data/bios.csv", &qtd_atletas); // tirei o .. pq POR ALGUM MOTIVO A LOGICA DO #INCLUDE É DIFERENTE, ent tava dando erro na leitura :/
+    Atleta* vetor_atletas = carregar_atletas("bios.csv", &qtd_atletas); // tirei o .. pq POR ALGUM MOTIVO A LOGICA DO #INCLUDE É DIFERENTE, ent tava dando erro na leitura :/
 
     // Verificação de segurança para o segundo arquivo
     if (vetor_atletas == NULL) {

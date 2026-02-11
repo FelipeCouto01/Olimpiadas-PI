@@ -13,7 +13,7 @@ int main() {
     printf("=== SISTEMA OLIMPICO MODULAR ===\n");
 
     // 1. LEITURA
-    dados = carregar_resultados("data/results.csv", &total);
+    dados = carregar_resultados("results.csv", &total);
 
     if (dados == NULL) {
         printf("Falha fatal no carregamento. Verifique o arquivo results.csv\n");

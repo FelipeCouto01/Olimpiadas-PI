@@ -7,6 +7,59 @@
 #include <ctype.h> 
 #include "../include/leitura.h" 
 
+// -----------------------------  inicio grafico ----------------------------- 
+
+//ja expliquei a logica dos graficos na questao3, é a mesma coisa aqui
+
+void gerar_grafico_Q2(char *pais, int masc, int fem) {
+    FILE *gnuplotPipe = popen("\"C:\\Program Files\\gnuplot\\bin\\gnuplot.exe\" -persistent", "w");
+
+    if (gnuplotPipe == NULL) {
+        printf("Gnuplot nao encontrado\n");
+        return;
+    }
+
+    printf("\nGerando grafico de genero...\n");
+
+    // config visual
+    fprintf(gnuplotPipe, "set terminal pngcairo size 800,600 enhanced font 'Verdana,10'\n");
+    fprintf(gnuplotPipe, "set output 'grafico_genero.png'\n");
+
+    fprintf(gnuplotPipe, "set title 'Participacao por Genero - %s'\n", pais);
+    fprintf(gnuplotPipe, "set ylabel 'Quantidade de Atletas'\n");
+
+    // estilo das barras
+    fprintf(gnuplotPipe, "set style fill solid 1.0 border -1\n");
+    fprintf(gnuplotPipe, "set boxwidth 0.5\n");
+    fprintf(gnuplotPipe, "set grid y\n");
+
+    // --- define o limite do eixo Y com uma margem de segurança ---
+    int maior_valor = (masc > fem) ? masc : fem;
+    int teto = maior_valor + (maior_valor * 0.1); // +10% de folga
+
+    if (teto == 0) {
+        teto = 10; // Evita crash se não houver atletas
+    }
+
+    fprintf(gnuplotPipe, "set yrange [0:%d]\n", teto);
+
+    // Plotagem
+    fprintf(gnuplotPipe, "plot '-' using 2:xtic(1) with boxes notitle linecolor rgb '#4682B4'\n");
+
+    // Envia os dados
+    fprintf(gnuplotPipe, "\"Masculino\" %d\n", masc);
+    fprintf(gnuplotPipe, "\"Feminino\" %d\n", fem);
+
+    fprintf(gnuplotPipe, "e\n");
+
+    fflush(gnuplotPipe);
+    pclose(gnuplotPipe);
+
+    printf("Grafico gerado: 'grafico_genero.png'\n");
+}
+
+// ----------------------------- fim grafico -----------------------------
+
 //Código inserido para evitar ocorrência de erros caso um usuário digite em minusculo ou de forma "indefinida", com bRa... ou bRA...
 void deixarMaiusculoQ2(char*str) {
     for (int i = 0; str[i] != '\0'; i++){
@@ -115,5 +168,5 @@ void participacaoPorGenero() {
     printf("No total, sao %d atletas", masculino+feminino);
 
     fclose(data);
-
+    gerar_grafico_Q2(pais, masculino, feminino);
 } 
